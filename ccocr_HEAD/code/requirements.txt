@@ -1,0 +1,19 @@
+# vim: set ts=4 sw=4 sts=4 et ff=unix fenc=utf-8 ai :
+#
+#   requirements.txt    251231  cy
+#
+#--------1---------2---------3---------4---------5---------6---------7--------#
+
+flask
+keyring
+numpy
+opencv-python       # import cv2
+openpyxl
+pandas
+pdf2image
+pillow              # import PIL
+requests
+scikit-image        # import skimage
+selenium
+sqlparse
+urllib3
