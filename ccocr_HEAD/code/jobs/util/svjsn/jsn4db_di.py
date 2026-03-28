@@ -4,6 +4,8 @@
 #   jsn4db_di.py    260328  cy
 #   updated: 260328 add angl/jw/jh to page; polygon via raw4 12-tuple
 #   updated: 260328 line conf -> None (DI API does not provide line confidence)
+#   updated: 260329 line conf None->0: DI API never returns 0, so 0 is safe as
+#            sentinel meaning "unknown confidence, treat as lowest priority"
 #
 #   Convert DI (Azure Document Intelligence) jsnRAW++ into jsn4db structure.
 #
