@@ -3,6 +3,7 @@
 #
 #   jsn4db_di.py    260328  cy
 #   updated: 260328 add angl/jw/jh to page; polygon via raw4 12-tuple
+#   updated: 260328 line conf -> None (DI API does not provide line confidence)
 #
 #   Convert DI (Azure Document Intelligence) jsnRAW++ into jsn4db structure.
 #
@@ -35,7 +36,7 @@ def convert_di(jsn):
                     word.get('confidence', 1.0)))
             lines_out.append({
                 **elem(str(lno), lraw, ptop, plft, zm,
-                       line.get('content', ''), 1.0),
+                       line.get('content', ''), None),
                 'words': words_out,
             })
 
