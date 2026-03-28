@@ -4,7 +4,7 @@
 #   spic.py     230425  cy
 #   updated: 260321 use webp for web, jpg for excel
 #   updated: 260322 replace use_noup_png() global with do.usepng check
-#   updated: 260328 remove use_noup (NOUP files gone); guard ww>=1
+#   updated: 260328 remove use_noup (NOUP files gone); guard ww>=1; guard oww/ohh==0
 #
 #--------1---------2---------3---------4---------5---------6---------7--------#
 
@@ -65,6 +65,9 @@ def spic(dig):
                 clip = png[top:btm, lft:ryt]
                 oww  = ryt - lft
                 ohh  = btm - top
+                if oww <= 0 or ohh <= 0:
+                    io.spic = err_png
+                    continue
                 hh   = int(30 * (30/46))
                 ww   = max(1, int(hh * (oww / ohh)))
                 clip = cv2.resize(clip, (ww, hh))
