@@ -3,6 +3,7 @@
 #
 #   drwpng.py   260328  cy
 #   updated: 260328 STR/CNV naming; handle both apisrc; inline draw
+#   updated: 260328 fix jw/jh per (engine,apisrc) via page_geom
 #
 #   Create pngROT, pngMK, pngRMK from dump.db + pngPRE.
 #   Called from control.py after svjsn().
@@ -28,18 +29,19 @@ from jobs.jsn2db.markpng.blnkpng import blnkpng
 from jobs.jsn2db.markpng.rotate  import rotate
 from jobs.jsn2db.markpng.nTyp    import nTyp
 
-_TAG = {'cnvpng': 'CNV', 'original': 'STR'}
+_TAG    = {'cnvpng': 'CNV', 'original': 'STR'}
+_APISRC = {'CNV': 'cnvpng', 'STR': 'original'}
 
 
 def drwpng():
     _setup_dirs()
-    pdfs, data = _load_db()
+    pdfs, page_geom, data = _load_db()
     if not pdfs:
         prnt('drwpng: no entries, skip')
         return
     blnkpng(pdfs, DD.pngPRE, DD.pngROT)
-    _draw_mk(data, pdfs)
-    _draw_rmk(data, pdfs)
+    _draw_mk(data, pdfs, page_geom)
+    _draw_rmk(data, pdfs, page_geom)
     prnt('drwpng done')
 
 
@@ -57,20 +59,25 @@ def _setup_dirs():
 def _load_db():
     """
     Returns:
-      pdfs : { pdf: { page: {angl, jw, jh} } }
-             ow/oh filled in later by blnkpng()
-      data : { (pdf, tag, engine): { page: [(node, tl_x..bl_y)] } }
-             tag = 'CNV' or 'STR'
+      pdfs      : { pdf: { page: {angl, jw, jh} } }
+                  one entry per (pdf, page) — first-encountered angl used for blnkpng()
+                  ow/oh filled in later by blnkpng()
+      page_geom : { (pdf, page, engine, apisrc): {jw, jh} }
+                  per-combination jw/jh for correct coordinate scaling
+      data      : { (pdf, tag, engine): { page: [(node, tl_x..bl_y)] } }
+                  tag = 'CNV' or 'STR'
     """
     con = sqlite3.connect(DD.dbf)
     cur = con.cursor()
 
     pdfs = {}
-    cur.execute('SELECT pdf, page, angl, jw, jh FROM page')
-    for pdf, page, angl, jw, jh in cur.fetchall():
+    page_geom = {}
+    cur.execute('SELECT pdf, page, angl, jw, jh, engine, apisrc FROM page')
+    for pdf, page, angl, jw, jh, engine, apisrc in cur.fetchall():
         pdfs.setdefault(pdf, {})
         pdfs[pdf].setdefault(
             page, {'angl': angl, 'jw': jw, 'jh': jh})
+        page_geom[(pdf, page, engine, apisrc)] = {'jw': jw, 'jh': jh}
 
     cur.execute('''
         SELECT pdf, page, node,
@@ -93,18 +100,19 @@ def _load_db():
             tl_x, tl_y, tr_x, tr_y,
             br_x, br_y, bl_x, bl_y))
     con.close()
-    return pdfs, data
+    return pdfs, page_geom, data
 
 
-def _draw_mk(data, pdfs):
+def _draw_mk(data, pdfs, page_geom):
     """pngPRE + pre-rotation boxes -> pngMK"""
     for (pdf, tag, engine), pages in data.items():
+        apisrc = _APISRC[tag]
         for page, elems in pages.items():
-            pg  = pdfs[pdf][page]
-            ow  = pg['ow']
-            oh  = pg['oh']
-            jw  = pg['jw']
-            jh  = pg['jh']
+            ow  = pdfs[pdf][page]['ow']
+            oh  = pdfs[pdf][page]['oh']
+            geom = page_geom[(pdf, page, engine, apisrc)]
+            jw  = geom['jw']
+            jh  = geom['jh']
             src = os.path.join(
                 DD.pngPRE, s2l(pdf, page, 'png'))
             dst = os.path.join(
@@ -126,16 +134,18 @@ def _draw_mk(data, pdfs):
             cv2write(dst, img)
 
 
-def _draw_rmk(data, pdfs):
+def _draw_rmk(data, pdfs, page_geom):
     """pngROT + post-rotation boxes -> pngRMK"""
     for (pdf, tag, engine), pages in data.items():
+        apisrc = _APISRC[tag]
         for page, elems in pages.items():
             pg   = pdfs[pdf][page]
             ow   = pg['ow']
             oh   = pg['oh']
-            jw   = pg['jw']
-            jh   = pg['jh']
             angl = pg['angl']
+            geom = page_geom[(pdf, page, engine, apisrc)]
+            jw   = geom['jw']
+            jh   = geom['jh']
             src  = os.path.join(
                 DD.pngROT, s2l(pdf, page, 'png'))
             dst  = os.path.join(
