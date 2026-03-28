@@ -68,7 +68,6 @@ import os
 from m.prnt   import prnt
 from m.env    import D
 from jobs.env import DD
-from .srtjsn  import srtjsn
 
 
 # ---------------------------------------------------------------------------
@@ -101,7 +100,6 @@ def jsn4db(bn, jsn, engine):
     out['dpi']    = DD.frmopt['dpi']
     out['qlty']   = DD.frmopt['qlty']
     out['usepng'] = DD.frmopt['usepng']
-    srtjsn(out['pages'])
     dst = os.path.join(jsn4db_dir, f'{bn}.{tag}.json')
     with open(dst, 'w', encoding='utf-8') as f:
         json.dump(out, f, indent=2, ensure_ascii=False)
