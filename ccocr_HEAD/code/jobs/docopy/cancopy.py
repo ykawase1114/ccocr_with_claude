@@ -3,6 +3,7 @@
 #
 #   cancopy.py      250324  cy
 #   updated: 260319.172930 by cy
+#   updated: 260328 opt比較: png2api=Falseならdpi/qlty不問
 #
 #--------1---------2---------3---------4---------5---------6---------7--------#
 
@@ -14,6 +15,22 @@ import re
 from m.env      import D
 from m.prnt     import prnt
 from jobs.env   import DD
+
+def _opt_match(old, new):
+    """png2api=False なら dpi/qlty は比較しない"""
+    if old['engines'] != new['engines']:
+        return False
+    if old['pdf2api'] != new['pdf2api']:
+        return False
+    if old['png2api'] != new['png2api']:
+        return False
+    if new['png2api']:
+        if old['dpi'] != new['dpi']:
+            return False
+        if old['qlty'] != new['qlty']:
+            return False
+    return True
+
 
 def cancopy():
     hit = False
@@ -36,14 +53,13 @@ def cancopy():
             continue
         with open(os.path.join(itm,'opt+imgs.json') ,encoding='utf-8') as f:
             jsn = json.load(f)
-        if jsn['opt'] != DD.frmopt:
+        if not _opt_match(jsn['opt'], DD.frmopt):
             prnt(f'{bn} skip due to "frmopt" not same')
             prnt(f'''
  jsn['opt'] -- old_log
  {jsn['opt']}
  DD.frmopt
  {DD.frmopt}''')
-
             continue
         if jsn['imgs'] != DD.imgs:
             prnt(f'{bn} skip due to "imgs" not same')
