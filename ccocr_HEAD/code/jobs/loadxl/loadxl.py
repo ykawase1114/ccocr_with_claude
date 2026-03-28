@@ -98,7 +98,9 @@ def loadxl():
 
     DD.frmopt = {   'dpi'       : dpi       ,
                     'qlty'      : picqlty   ,
-                    'engines'   : engines   }
+                    'engines'   : engines   ,
+                    'pdf2api'   : pdf2api   ,
+                    'png2api'   : png2api   }
 
     # images info will be added
 
