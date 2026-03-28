@@ -13,7 +13,8 @@ class DD:
     horiz   = None
     ## set at extraitms (values are for old "global" sheet)
     engines     = ['vision']
-    usepng      = True
+    pdf2api     = False
+    png2api     = True
     use_web     = False
     use_macro   = True
     use_spic    = True

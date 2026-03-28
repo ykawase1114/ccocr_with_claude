@@ -32,7 +32,7 @@ def oos():
         # straight rows are not inserted into _OOS by mark_oos, but guard anyway
         if usepng == 'straight':
             continue
-        use_noup = (usepng == 'png' and DD.usepng in (False, 'BOTH'))
+        use_noup = (usepng == 'png' and DD.pdf2api)
         os.makedirs(ignrd, exist_ok=True)
         while pg <= pg_to:
             longname = s2l(pdf, pg, 'png')

@@ -38,7 +38,7 @@ def spic(dig):
                         continue
                     io.spic = err_png   # placeholder so downstream never sees None
                 continue
-            use_noup = (docObj.usepng == 'png' and DD.usepng in (False, 'BOTH'))
+            use_noup = (docObj.usepng == 'png' and DD.pdf2api)
             for io in docObj.itm:
                 if io.dl.clm is None:
                     continue

@@ -4,9 +4,7 @@
 #   usepng.py   260318  cy
 #   updated: 260321 strip_label handles CV/DI suffixes
 #
-#   Utility functions for DD.usepng value checking.
-#   DD.usepng can be True / False / 'BOTH'.
-#   Centralizing these checks prevents bugs from 'BOTH' being truthy.
+#   Utility functions for DD.pdf2api / DD.png2api checking.
 #
 #--------1---------2---------3---------4---------5---------6---------7--------#
 
@@ -16,15 +14,15 @@ from ..env import DD
 
 def use_png_conversion():
     # True when PNG conversion is performed before sending to API
-    return DD.usepng in (True, 'BOTH')
+    return DD.png2api
 
 def use_straight():
     # True when files are sent to API as-is (without PNG conversion)
-    return DD.usepng in (False, 'BOTH')
+    return DD.pdf2api
 
 def use_noup_png():
     # True when NOUP.png (marking copy) should be used instead of plain .png
-    return DD.usepng in (False, 'BOTH')
+    return DD.pdf2api
 
 def strip_label(name):
     # Remove BOTH-mode and engine suffixes added to elmlst[0] for Excel column A labeling

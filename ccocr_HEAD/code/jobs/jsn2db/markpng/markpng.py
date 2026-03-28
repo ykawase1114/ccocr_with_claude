@@ -106,14 +106,14 @@ def markpng(elmlst):
         # draw bounding boxes onto pngMK (pre-rotation) and pngRMK (post-rotation)
         drwlst     = mkdrwlst(elmlst_png_bare, pdfs_bare)
         drwlst_rot = mkdrwlst_rot(elmlst_png_bare, pdfs_bare)
-        draw(drwlst,     pngORG, pngMK,  use_noup=DD.usepng in (False, 'BOTH'))
-        draw_rot(drwlst_rot, pngROT, pngRMK, use_noup=DD.usepng in (False, 'BOTH'))
+        draw(drwlst,     pngORG, pngMK,  use_noup=DD.pdf2api)
+        draw_rot(drwlst_rot, pngROT, pngRMK, use_noup=DD.pdf2api)
     else:
         prnt('markpng: no png entries (straight-only mode), skipping blnkpng/draw')
 
     # BOTH mode: also draw STRAIGHT OCR results onto NOUP.png
     # (straight entries have inch-unit coords; convert to pixel via jw/jh -> ow/oh)
-    if DD.usepng == 'BOTH' and elmlst_straight:
+    if DD.pdf2api and DD.png2api and elmlst_straight:
         draw_straight(elmlst_straight, pdfs_bare, pngORG, pngMK, pngRMK)
 
 

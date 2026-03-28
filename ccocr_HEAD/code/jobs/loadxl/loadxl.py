@@ -69,7 +69,8 @@ def loadxl():
     if xlver in ['ccocr_v260317']:  ## extra options to support doc. intelli
         extraitms(wb,names)
     engines     = DD.engines
-    usepng      = DD.usepng
+    pdf2api     = DD.pdf2api
+    png2api     = DD.png2api
     use_web     = DD.use_web
     use_macro   = DD.use_macro
     use_spic    = DD.use_spic
@@ -83,7 +84,8 @@ def loadxl():
   twoup     {twoup}
   hv        {hv}
   engines   {engines}
-  usepng    {usepng}
+  pdf2api   {pdf2api}
+  png2api   {png2api}
   use_web   {use_web}
   use_macro {use_macro}
   use_spic  {use_spic}''')
@@ -96,8 +98,7 @@ def loadxl():
 
     DD.frmopt = {   'dpi'       : dpi       ,
                     'qlty'      : picqlty   ,
-                    'engines'   : engines   ,
-                    'usepng'    : usepng    }
+                    'engines'   : engines   }
 
     # images info will be added
 

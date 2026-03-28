@@ -29,11 +29,14 @@ def extraitms(wb,names):
         raise Exception('BANG!!! at extraitms() AA')
 
     if pdf2png == 'PNG変換する':    # name 'pdf2png' is used in code
-        DD.usepng   = True
+        DD.pdf2api  = False
+        DD.png2api  = True
     elif pdf2png == 'PNG変換しない':
-        DD.usepng   = False
+        DD.pdf2api  = True
+        DD.png2api  = False
     elif pdf2png == '両方':
-        DD.usepng = 'BOTH'
+        DD.pdf2api  = True
+        DD.png2api  = True
     else:
         raise Exception('BANG!!! at extraitms() BB')
 

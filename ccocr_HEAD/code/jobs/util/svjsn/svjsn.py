@@ -36,6 +36,7 @@ def svjsn():
     for png in sorted(glob.glob(os.path.join(DD.pngUP, '*'))):
         bn = os.path.basename(png)
         prnt(f'letting API read {bn}')
+        usepng = 'STRAIGHT.' not in bn
         for engine in DD.engines:
             if engine == 'vision':
                 jsnf = os.path.join(DD.jsn_raw, f'{bn}.CV.json')
@@ -48,5 +49,5 @@ def svjsn():
             else:
                 raise Exception(f'unknown engine: {engine}')
             jsn = wrd2line(bn, jsn, engine)
-            jsn4db(bn, jsn, engine)
+            jsn4db(bn, jsn, engine, usepng)
     return

@@ -50,7 +50,7 @@ def _chkjsn_dir(jsndir, engine_tag, elmlst):
                     for wnode, word_jsn in enumerate(line_jsn['words']):
                         p4(bn, word_jsn, cntp, node, wnode, elmlst, pginfo)
                 for k in range(idx_before, len(elmlst)):
-                    label_both  = ' STRAIGHT' if DD.usepng == 'BOTH' else ''
+                    label_both  = ' STRAIGHT' if (DD.pdf2api and DD.png2api) else ''
                     elmlst[k][0] = elmlst[k][0] + label_both + f' {engine_tag}'
                     elmlst[k].append(usepng)    # index -1: usepng
         else:
@@ -69,7 +69,7 @@ def _chkjsn_dir(jsndir, engine_tag, elmlst):
                     for wnode, word_jsn in enumerate(line_jsn['words']):
                         p4(bn, word_jsn, cntp, node, wnode, elmlst, pginfo)
                 for k in range(idx_before, len(elmlst)):
-                    label_both  = ' from PNG' if DD.usepng == 'BOTH' else ''
+                    label_both  = ' from PNG' if (DD.pdf2api and DD.png2api) else ''
                     elmlst[k][0] = elmlst[k][0] + label_both + f' {engine_tag}'
                     elmlst[k].append(usepng)    # index -1: usepng
 
