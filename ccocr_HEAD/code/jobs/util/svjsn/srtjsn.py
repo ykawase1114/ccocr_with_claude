@@ -28,7 +28,6 @@ from m.prnt import prnt
 _WIDTH      = 1200   # normalized coordinate width
 _MIN_GAP    = 50     # minimum column separator width (normalized coords)
 _MIN_COV    = 0.75   # gap must appear in this fraction of multi-line rows
-_COL_BUFFER = 100    # extend column region this far below last multi-line row
 
 
 # ---------------------------------------------------------------------------
@@ -58,18 +57,10 @@ def _sort_lines(lines):
 
     if seps:
         prnt(f'srtjsn: {len(seps)+1}-col  separators={seps}')
-        # column region: near the multi-line rows where columns were detected
-        multi  = [row for row in rows if len(row) >= 2]
-        maxbtm = max(max(m['btm'] for m in row) for row in multi)
-        colmax = maxbtm + _COL_BUFFER
-
-        col_lines  = [ln for ln in lines if ln['top'] <= colmax]
-        post_lines = [ln for ln in lines if ln['top'] >  colmax]
-
         tagged = sorted(
-            ((_col_of(ln, seps), ln) for ln in col_lines),
+            ((_col_of(ln, seps), ln) for ln in lines),
             key=lambda t: (t[0], t[1]['top']))
-        result = [ln for _, ln in tagged] + sorted(post_lines, key=lambda l: l['top'])
+        result = [ln for _, ln in tagged]
     else:
         result = sorted(lines, key=lambda l: l['top'])
 
