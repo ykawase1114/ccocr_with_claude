@@ -25,11 +25,11 @@ def dump2db_xl():
     DD.dumpf = xlf
     xlbn = os.path.basename(xlf)
 
-    idx = ['seq', 'pdf', 'page', 'node', 'typ',
+    idx = ['seq', 'pdf', 'engine', 'apisrc',
+           'page', 'node', 'typ',
            'pg_top', 'pg_btm',
            'top', 'btm', 'lft', 'ryt', 'txt',
-           'note1', 'note2',
-           'engine', 'apisrc']
+           'note1', 'note2']
 
     wb = openpyxl.Workbook(write_only=True)
     ws = wb.create_sheet()
@@ -42,10 +42,9 @@ def dump2db_xl():
 
     for cnty, row in enumerate(cur.execute('''
         SELECT seq,
-               pdf || CASE WHEN engine != '' THEN ' ' || engine ELSE '' END,
+               pdf, engine, apisrc,
                page, node, typ, pg_top, pg_btm,
-               top, btm, lft, ryt, txt, note1, note2,
-               engine, apisrc
+               top, btm, lft, ryt, txt, note1, note2
         FROM elm
         ORDER BY seq''')):
         ws.append(row)
