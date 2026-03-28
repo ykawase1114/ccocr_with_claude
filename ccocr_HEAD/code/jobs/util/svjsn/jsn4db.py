@@ -66,9 +66,11 @@ import json
 import os
 import re
 
-from m.prnt   import prnt
-from m.env    import D
-from jobs.env import DD
+from m.prnt       import prnt
+from m.env        import D
+from jobs.env     import DD
+from .jsn4db_cv   import convert_cv
+from .jsn4db_di   import convert_di
 
 
 # ---------------------------------------------------------------------------
@@ -91,10 +93,10 @@ def jsn4db(bn, jsn, engine, apisrc):
 
     if engine == 'vision':
         tag = 'CV'
-        out = _convert_cv(jsn)
+        out = convert_cv(jsn)
     elif engine == 'intelli':
         tag = 'DI'
-        out = _convert_di(jsn)
+        out = convert_di(jsn)
     else:
         raise Exception(f'jsn4db: unknown engine: {engine}')
 
@@ -120,155 +122,3 @@ def jsn4db(bn, jsn, engine, apisrc):
     prnt(f'jsn4db ({tag}) saved   {os.path.basename(dst)}')
     return out
 
-
-# ---------------------------------------------------------------------------
-# per-engine converters
-# ---------------------------------------------------------------------------
-
-def _convert_cv(jsn):
-    pages_raw = jsn['analyzeResult']['readResults']
-    pages_out = []
-    for page_raw in pages_raw:
-        page_num  = page_raw['page']
-        lines_raw = page_raw.get('lines', [])
-
-        elems = _collect_cv(lines_raw)
-        ptop, plft, pryt = _page_bounds(elems)
-        zoom = _zoom(plft, pryt)
-
-        lines_out = []
-        for lno, line in enumerate(lines_raw, 1):
-            lraw = _raw4(line['boundingBox'])
-            conf = line.get('appearance', {}).get('style', {}).get('confidence', 1.0)
-            words_out = []
-            for wno, word in enumerate(line.get('words', []), 1):
-                wraw = _raw4(word['boundingBox'])
-                words_out.append(_elem(
-                    f'{lno}.{wno}', wraw, ptop, plft, zoom,
-                    word.get('text', ''), word.get('confidence', 1.0)))
-            lines_out.append({
-                **_elem(str(lno), lraw, ptop, plft, zoom,
-                        line.get('text', ''), conf),
-                'words': words_out,
-            })
-
-        pages_out.append({
-            'page' : page_num,
-            'ptop' : ptop,
-            'plft' : plft,
-            'pryt' : pryt,
-            'lines': lines_out,
-        })
-
-    return {'pages': pages_out}
-
-
-def _convert_di(jsn):
-    pages_raw = jsn.get('pages', [])
-    pages_out = []
-    for page_raw in pages_raw:
-        page_num  = page_raw.get('pageNumber', 1)
-        lines_raw = page_raw.get('lines', [])
-        orphans   = page_raw.get('orphan_words', [])
-
-        elems = _collect_di(lines_raw, orphans)
-        ptop, plft, pryt = _page_bounds(elems)
-        zoom = _zoom(plft, pryt)
-
-        lines_out = []
-        for lno, line in enumerate(lines_raw, 1):
-            lraw = _raw4(line['polygon'])
-            words_out = []
-            for wno, word in enumerate(line.get('words', []), 1):
-                wraw = _raw4(word['polygon'])
-                words_out.append(_elem(
-                    f'{lno}.{wno}', wraw, ptop, plft, zoom,
-                    word.get('content', ''), word.get('confidence', 1.0)))
-            lines_out.append({
-                **_elem(str(lno), lraw, ptop, plft, zoom,
-                        line.get('content', ''), 1.0),
-                'words': words_out,
-            })
-
-        page_dict = {
-            'page' : page_num,
-            'ptop' : ptop,
-            'plft' : plft,
-            'pryt' : pryt,
-            'lines': lines_out,
-        }
-
-        if orphans:
-            orphans_out = []
-            for ono, word in enumerate(orphans, 1):
-                wraw = _raw4(word['polygon'])
-                orphans_out.append(_elem(
-                    f'orphan.{ono}', wraw, ptop, plft, zoom,
-                    word.get('content', ''), word.get('confidence', 1.0)))
-            page_dict['orphan_words'] = orphans_out
-
-        pages_out.append(page_dict)
-
-    return {'pages': pages_out}
-
-
-# ---------------------------------------------------------------------------
-# geometry helpers
-# ---------------------------------------------------------------------------
-
-def _raw4(bb):
-    # bb: [TL_x, TL_y, TR_x, TR_y, BR_x, BR_y, BL_x, BL_y]
-    top = min(bb[1], bb[3])
-    btm = max(bb[5], bb[7])
-    lft = min(bb[0], bb[6])
-    ryt = max(bb[2], bb[4])
-    return top, btm, lft, ryt
-
-
-def _collect_cv(lines_raw):
-    elems = []
-    for line in lines_raw:
-        elems.append(_raw4(line['boundingBox']))
-        for word in line.get('words', []):
-            elems.append(_raw4(word['boundingBox']))
-    return elems
-
-
-def _collect_di(lines_raw, orphans):
-    elems = []
-    for line in lines_raw:
-        elems.append(_raw4(line['polygon']))
-        for word in line.get('words', []):
-            elems.append(_raw4(word['polygon']))
-    for word in orphans:
-        elems.append(_raw4(word['polygon']))
-    return elems
-
-
-def _page_bounds(elems):
-    ptop = min(e[0] for e in elems)
-    plft = min(e[2] for e in elems)
-    pryt = max(e[3] for e in elems)
-    return ptop, plft, pryt
-
-
-def _zoom(plft, pryt):
-    width = pryt - plft
-    return 1200 / width if width > 0 else 1.0
-
-
-def _elem(node, raw, ptop, plft, zoom, text, conf):
-    top, btm, lft, ryt = raw
-    return {
-        'node' : node,
-        'top'  : round((top - ptop) * zoom),
-        'btm'  : round((btm - ptop) * zoom),
-        'lft'  : round((lft - plft) * zoom),
-        'ryt'  : round((ryt - plft) * zoom),
-        'otop' : top,
-        'obtm' : btm,
-        'olft' : lft,
-        'oryt' : ryt,
-        'text' : text,
-        'conf' : conf,
-    }
