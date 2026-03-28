@@ -2,6 +2,7 @@
 # vim: set ts=4 sw=4 sts=4 et ff=unix fenc=utf-8 ai :
 #
 #   jsn4db_cv.py    260328  cy
+#   updated: 260328 add angl/jw/jh to page; polygon via raw4 12-tuple
 #
 #   Convert CV (Azure Computer Vision) jsnRAW++ into jsn4db page structure.
 #
@@ -24,13 +25,15 @@ def convert_cv(jsn):
         lines_out = []
         for lno, line in enumerate(lines_raw, 1):
             lraw = raw4(line['boundingBox'])
-            conf = line.get('appearance', {}).get('style', {}).get('confidence', 1.0)
+            conf = line.get('appearance', {}).get(
+                'style', {}).get('confidence', 1.0)
             words_out = []
             for wno, word in enumerate(line.get('words', []), 1):
                 wraw = raw4(word['boundingBox'])
                 words_out.append(elem(
                     f'{lno}.{wno}', wraw, ptop, plft, zm,
-                    word.get('text', ''), word.get('confidence', 1.0)))
+                    word.get('text', ''),
+                    word.get('confidence', 1.0)))
             lines_out.append({
                 **elem(str(lno), lraw, ptop, plft, zm,
                        line.get('text', ''), conf),
@@ -39,6 +42,9 @@ def convert_cv(jsn):
 
         pages_out.append({
             'page' : page_num,
+            'angl' : page_raw.get('angle', 0.0),
+            'jw'   : page_raw.get('width',  0.0),
+            'jh'   : page_raw.get('height', 0.0),
             'ptop' : ptop,
             'plft' : plft,
             'pryt' : pryt,

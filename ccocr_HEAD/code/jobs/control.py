@@ -14,6 +14,7 @@ from .setup_flds.setup_flds import setup_flds
 from .docopy.docopy         import docopy
 from .pdf2png.pdf2png       import pdf2png
 from .util.svjsn.svjsn      import svjsn
+from .util.drwpng           import drwpng
 #from .jsn2db.jsn2db         import jsn2db
 from .aby.aby               import aby
 
@@ -28,30 +29,24 @@ def control():
         if docopy() is False:       # use lod png* or not
             pdf2png()
             svjsn()
+            drwpng()
             #
             #   CHECKPOINT (B)
             #
-            #   jsnRAW  ready   hoge.ext.NN.CV.json
-            #                   hoge.ext.NN.DI.json
-            #
-            #   pngPRE  ready   hoge.ext.NN.png             (canvas only)
-            #   pngUP   ready   hoge.ext.NN.png / hoge.ext.STRAIGHT.ext
-            #
-            #   NOT YET         pngROT pngMK pngRMK
+            #   dump.db dump.xlsx   ready
+            #   pngROT pngMK pngRMK ready
             #
             prnt('''
 
-    CHECK (B): svjsn() finished
-    1) jsnRAW : API responses ready (hoge.ext.NN.CV.json / .DI.json)
-    2) pngROT pngMK pngRMK : NOT YET CREATED
+    CHECK (B): drwpng() finished
+    1) dump.db / dump.xlsx : ready
+    2) pngROT pngMK pngRMK : ready
 
     BACKUP log folder
 
-    hit a key to quit now ...
+    hit a key to go on (aby) or Ctrl+C to quit ...
             ''')
             input('ok? ')
-            quit()
-
             ## chkjson moved
 #            jsn2db()                ## json -> db, mark png
 

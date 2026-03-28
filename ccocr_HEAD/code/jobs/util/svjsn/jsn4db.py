@@ -106,6 +106,8 @@ def jsn4db(bn, jsn, engine, apisrc):
     out['apisrc'] = apisrc
 
     if apisrc == 'cnvpng':
+        pg_num = int(re.search(r'\.(\d+)\.png$', bn).group(1))
+        out['pages'][0]['page'] = pg_num
         base = re.sub(r'\.\d+\.png$', '', bn)   # hoge.ext.01.png -> hoge.ext
         dst  = os.path.join(jsn4db_dir, f'{base}.CONV2PNG.{tag}.json')
         if os.path.exists(dst):

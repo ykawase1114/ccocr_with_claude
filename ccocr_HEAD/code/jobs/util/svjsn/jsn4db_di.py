@@ -2,8 +2,9 @@
 # vim: set ts=4 sw=4 sts=4 et ff=unix fenc=utf-8 ai :
 #
 #   jsn4db_di.py    260328  cy
+#   updated: 260328 add angl/jw/jh to page; polygon via raw4 12-tuple
 #
-#   Convert DI (Azure Document Intelligence) jsnRAW++ into jsn4db page structure.
+#   Convert DI (Azure Document Intelligence) jsnRAW++ into jsn4db structure.
 #
 #--------1---------2---------3---------4---------5---------6---------7--------#
 
@@ -30,7 +31,8 @@ def convert_di(jsn):
                 wraw = raw4(word['polygon'])
                 words_out.append(elem(
                     f'{lno}.{wno}', wraw, ptop, plft, zm,
-                    word.get('content', ''), word.get('confidence', 1.0)))
+                    word.get('content', ''),
+                    word.get('confidence', 1.0)))
             lines_out.append({
                 **elem(str(lno), lraw, ptop, plft, zm,
                        line.get('content', ''), 1.0),
@@ -39,6 +41,9 @@ def convert_di(jsn):
 
         page_dict = {
             'page' : page_num,
+            'angl' : page_raw.get('angle', 0.0),
+            'jw'   : page_raw.get('width',  0.0),
+            'jh'   : page_raw.get('height', 0.0),
             'ptop' : ptop,
             'plft' : plft,
             'pryt' : pryt,
@@ -51,7 +56,8 @@ def convert_di(jsn):
                 wraw = raw4(word['polygon'])
                 orphans_out.append(elem(
                     f'orphan.{ono}', wraw, ptop, plft, zm,
-                    word.get('content', ''), word.get('confidence', 1.0)))
+                    word.get('content', ''),
+                    word.get('confidence', 1.0)))
             page_dict['orphan_words'] = orphans_out
 
         pages_out.append(page_dict)

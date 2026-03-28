@@ -12,10 +12,10 @@ import json
 import os
 import shutil
 
-from m.env      import D
-from m.prnt     import prnt
-from ..env      import DD
-from ..util.msg import shutilerr,noimg
+from m.env          import D
+from m.prnt         import prnt
+from jobs.env       import DD
+from jobs.util.msg  import shutilerr,noimg
 
 #from .ldmsconf  import ldmsconf
 from .ldmsconf.ldmsconf  import ldmsconf
