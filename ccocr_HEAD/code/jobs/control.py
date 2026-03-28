@@ -6,7 +6,10 @@
 #
 #--------1---------2---------3---------4---------5---------6---------7--------#
 
+import os
+
 from m.prnt                 import prnt
+from m.env                  import D
 from .env                   import DD
 from .loadxl.loadxl         import loadxl
 from .mv2input.mv2input     import mv2input
@@ -30,6 +33,8 @@ def control():
             pdf2png()
             svjsn()
             drwpng()
+            with open(os.path.join(D.logd, 'dumpdb_ok.txt'), 'w') as f:
+                f.write('')
             #
             #   CHECKPOINT (B)
             #

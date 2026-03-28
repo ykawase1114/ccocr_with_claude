@@ -18,7 +18,7 @@ from jobs.env   import DD
 def cancopy():
     hit = False
     logbase = os.path.normpath(os.path.join(D.logd,r'..'))
-    for itm in reversed(glob.glob(os.path.join(logbase,'*'))):
+    for itm in sorted(glob.glob(os.path.join(logbase,'*')), reverse=True):
         bn = os.path.basename(itm)
         if os.path.isfile(itm):
             prnt(f'{bn} skip due to not dir')
@@ -29,7 +29,7 @@ def cancopy():
             prnt(f'{bn} skip due to dirname NG')
             continue
         if not os.path.isfile(os.path.join(itm,'dumpdb_ok.txt')):
-            prnt(f'{bn} skip due to no "dump_ok.txt"')
+            prnt(f'{bn} skip due to no "dumpdb_ok.txt"')
             continue
         if not os.path.isfile(os.path.join(itm,'opt+imgs.json')):
             prnt(f'{bn} skip due to no "opt+imgs.json"')
