@@ -41,7 +41,7 @@ def control():
             #   dump.db dump.xlsx   ready
             #   pngROT pngMK pngRMK ready
             #
-            prnt('''
+        prnt('''
 
     CHECK (B): drwpng() finished
     1) dump.db / dump.xlsx : ready
