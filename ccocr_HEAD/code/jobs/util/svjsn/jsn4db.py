@@ -105,14 +105,15 @@ def jsn4db(bn, jsn, engine, apisrc):
 
     if apisrc == 'cnvpng':
         base = re.sub(r'\.\d+\.png$', '', bn)   # hoge.ext.01.png -> hoge.ext
-        dst  = os.path.join(jsn4db_dir, f'{base}.CONV2PNG.png.{tag}.json')
+        dst  = os.path.join(jsn4db_dir, f'{base}.CONV2PNG.{tag}.json')
         if os.path.exists(dst):
             with open(dst, 'r', encoding='utf-8') as f:
                 existing = json.load(f)
             existing['pages'].extend(out['pages'])
             out = existing
     else:
-        dst = os.path.join(jsn4db_dir, f'{bn}.{tag}.json')
+        base = os.path.splitext(bn)[0]           # hoge.ext.STRAIGHT.png -> hoge.ext.STRAIGHT
+        dst  = os.path.join(jsn4db_dir, f'{base}.{tag}.json')
 
     with open(dst, 'w', encoding='utf-8') as f:
         json.dump(out, f, indent=2, ensure_ascii=False)
