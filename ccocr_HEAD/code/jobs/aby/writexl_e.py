@@ -83,13 +83,8 @@ def writexl_e(dig):
         ##
         ## sheet body
         ##
-        _last_key = None
-        _rie = 0  # row index within engine+usepng group
+        _rie = 0  # row index, accumulated across all engine/usepng groups
         for row,do in enumerate(dig[docname]):  # do == docObj == 1 biz doc
-            _key = (do.engine, do.usepng)
-            if _key != _last_key:
-                _rie = 0
-                _last_key = _key
             #
             #   fill pdf, document number, page(from), i# (instance num)
             #
