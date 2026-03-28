@@ -41,19 +41,6 @@ def control():
         #   dump.db dump.xlsx   ready
         #   pngROT pngMK pngRMK ready
         #
-        prnt('''
-
-    CHECK (B): drwpng() finished
-    1) dump.db / dump.xlsx : ready
-    2) pngROT pngMK pngRMK : ready
-
-    BACKUP log folder
-
-    hit a key to quit()
-            ''')
-        input('ok? ')
-        quit()
-
         aby(msconf)
     elif DD.jobtyp == 'txt':
         setup_flds()

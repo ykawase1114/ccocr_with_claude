@@ -86,31 +86,4 @@ def pdf2png():
         lines = [f'  {f}: {sorted(DD.skipPdfEnc.get(f, set()))}'
                  for f in DD.skipPdf]
         prnt('bad font PDFs:\n' + '\n'.join(lines))
-    #
-    #   CHECKPOINT (A)
-    #
-    #   pngUP ready  hoge.ext.NN.png          usepng=True  / BOTH
-    #                hoge.ext.STRAIGHT.ext     usepng=False / BOTH
-    #
-    #   pngPRE ready hoge.ext.NN.png          (canvas for marking)
-    #
-    #   NOT YET      pngROT pngMK pngRMK      (created in jsn2db)
-    #
-    prnt('''
-
-    updated: 260323.225013 by cy
-    input() disabled
-
-    CHECK (A): pdf2png() finished
-    1) pngUP  : files ready for API
-    2) pngPRE : hoge.ext.NN.png (canvas only, no NOUP)
-    3) pngROT pngMK pngRMK : NOT YET CREATED
-
-    BACKUP log folder
-
-    hit any key to go on...''')
-#    nxt = input('ok? ')
-#    if nxt.lower() == 'q':
-#        quit()
-
     return
