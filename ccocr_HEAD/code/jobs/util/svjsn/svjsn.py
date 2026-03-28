@@ -20,6 +20,7 @@ from .updn_cv       import updn_cv
 from .updn_di       import updn_di
 from .wrd2line      import wrd2line
 from .jsn4db        import jsn4db
+from .dump2db       import dump2db
 
 from .chk_cv.chk_cv     import chk_cv
 from .chk_di.chk_di     import chk_di
@@ -33,6 +34,7 @@ def svjsn():
         DD.cred_ok = True
         prnt('DI clinent loaded')
 
+    jsn4db_results = {}
     for png in sorted(glob.glob(os.path.join(DD.pngUP, '*'))):
         bn = os.path.basename(png)
         prnt(f'letting API read {bn}')
@@ -49,5 +51,8 @@ def svjsn():
             else:
                 raise Exception(f'unknown engine: {engine}')
             jsn = wrd2line(bn, jsn, engine)
-            jsn4db(bn, jsn, engine, apisrc)
+            out, dst = jsn4db(bn, jsn, engine, apisrc)
+            jsn4db_results[dst] = out
+
+    dump2db(jsn4db_results)
     return

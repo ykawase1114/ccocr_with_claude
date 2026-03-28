@@ -117,8 +117,10 @@ def jsn4db(bn, jsn, engine, apisrc):
         base = os.path.splitext(bn)[0]           # hoge.ext.STRAIGHT.png -> hoge.ext.STRAIGHT
         dst  = os.path.join(jsn4db_dir, f'{base}.{tag}.json')
 
+    out['pdf'] = base
+
     with open(dst, 'w', encoding='utf-8') as f:
         json.dump(out, f, indent=2, ensure_ascii=False)
     prnt(f'jsn4db ({tag}) saved   {os.path.basename(dst)}')
-    return out
+    return out, dst
 
