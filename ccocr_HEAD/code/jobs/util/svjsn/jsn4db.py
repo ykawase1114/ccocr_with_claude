@@ -64,6 +64,7 @@
 
 import json
 import os
+import re
 
 from m.prnt   import prnt
 from m.env    import D
@@ -101,7 +102,18 @@ def jsn4db(bn, jsn, engine, apisrc):
     out['dpi']    = DD.frmopt['dpi']
     out['qlty']   = DD.frmopt['qlty']
     out['apisrc'] = apisrc
-    dst = os.path.join(jsn4db_dir, f'{bn}.{tag}.json')
+
+    if apisrc == 'cnvpng':
+        base = re.sub(r'\.\d+\.png$', '', bn)   # hoge.ext.01.png -> hoge.ext
+        dst  = os.path.join(jsn4db_dir, f'{base}.CONV2PNG.png.{tag}.json')
+        if os.path.exists(dst):
+            with open(dst, 'r', encoding='utf-8') as f:
+                existing = json.load(f)
+            existing['pages'].extend(out['pages'])
+            out = existing
+    else:
+        dst = os.path.join(jsn4db_dir, f'{bn}.{tag}.json')
+
     with open(dst, 'w', encoding='utf-8') as f:
         json.dump(out, f, indent=2, ensure_ascii=False)
     prnt(f'jsn4db ({tag}) saved   {os.path.basename(dst)}')
