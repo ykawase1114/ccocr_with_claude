@@ -29,7 +29,7 @@ def gkgmchk(docdef,attrs):
         if  i.startswith('gk_'):
             m = re.match(r'^gk(_[^_]+)*$',i)
             if m == None:
-                raise Exception(f'rg naming erro in {docdef} "{i}"')
+                raise Exception(f'rg naming error in {docdef} "{i}"')
         ##
         ## find gm with no gk
         ##

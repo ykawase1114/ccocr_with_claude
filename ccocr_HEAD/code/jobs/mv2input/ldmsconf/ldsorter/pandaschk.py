@@ -22,9 +22,9 @@ def pandaschk(sorter):
         if obj.type == 'single':
             chk(obj.defs, f'{docname}_single')
         elif obj.type == 'multi':
-            chk(obj.hd, f'{docname}_muitl_hd')  #
-            chk(obj.md, f'{docname}_muitl_md')  #   REFERENCE CANNOT ACROSS!
-            chk(obj.ft, f'{docname}_muitl_ft')  #
+            chk(obj.hd, f'{docname}_multi_hd')  #
+            chk(obj.md, f'{docname}_multi_md')  #   REFERENCE CANNOT ACROSS!
+            chk(obj.ft, f'{docname}_multi_ft')  #
         else:
             raise Exception('program bug')
     return

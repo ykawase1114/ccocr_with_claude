@@ -31,7 +31,6 @@ def lv0chk(sht):
         if type(row[clm.dname]) != str:
             raise Exception(f'ERROR sorter has WRONG dname "{row[clm.dname]}"')
         if row[clm.dname].isnumeric():
-            prnt(f'ERROR sorter has WRONG dname "{row[clm.dname]}"')
             raise Exception(f'ERROR sorter has WRONG dname "{row[clm.dname]}"')
         m = re.match(r'^[a-zA-Z0-9_]+$',row[clm.dname])
         if m == None:
