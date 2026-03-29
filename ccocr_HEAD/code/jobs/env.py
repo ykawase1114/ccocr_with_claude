@@ -29,8 +29,6 @@ class DD:
     usrd        = None
     inputd      = None
     img         = None
-    pdfpg       = None
-    pdfpgPng    = None
     pngPRE          = None
     pngUP           = None
     jsn         = None

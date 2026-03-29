@@ -4,6 +4,7 @@
 #   setup_flds.py       250131  cy
 #   updated: 260319.190153 by cy
 #   updated: 260321 add jsnRAW dir
+#   updated: 260329 remove pdfpg (unused)
 #
 #   this is for 'frm' mode
 #
@@ -27,8 +28,6 @@ def setup_flds():
 
     inputd      = os.path.join(D.logd,'input')
     img         = os.path.join(D.logd,'img')        # picfile in input
-    pdfpg       = os.path.join(D.logd,'pdfpg')
-    pdfpgPng    = os.path.join(D.logd,'pdfpgPng')
     pngPRE      = os.path.join(D.logd,'pngPRE')     # png of abv
     pngUP       = os.path.join(D.logd,'pngUP')      # PNG converted files for API
     jsn         = os.path.join(D.logd,'jsn')        # marged json    : jsnd
@@ -52,16 +51,12 @@ def setup_flds():
     DD.tblsf    = tblsf
 
     os.mkdir(img)
-    os.mkdir(pdfpg)
-    os.mkdir(pdfpgPng)
     os.mkdir(pngPRE)
     os.mkdir(pngUP)
     os.mkdir(jsn)
     os.mkdir(jsn_raw)
     DD.inputd           = inputd
     DD.img              = img
-    DD.pdfpg            = pdfpg
-    DD.pdfpgPng         = pdfpgPng
     DD.pngPRE           = pngPRE
     DD.pngUP            = pngUP
     DD.jsn      = jsn
