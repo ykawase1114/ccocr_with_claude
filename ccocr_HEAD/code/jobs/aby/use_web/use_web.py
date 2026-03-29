@@ -50,11 +50,11 @@ def use_web():
             for ci, cd in enumerate(rd):
                 ws.cell(row=ri+2, column=ci+1).value = cd
     wb.remove(wb['Sheet'])
-    xl = os.path.join(D.logd,f'{D.jobid}.xlsm')
+    xl = os.path.join(D.logd,f'{D.jobid}_WEB.xlsm')
     wb.save(xl)
     prnt(f'xl saved\n  {xl}')
     # copy instead of second wb.save() to avoid BytesIO closed-file error
-    uxl = os.path.join(DD.thisOutd,f'{D.jobid}.xlsm')
+    uxl = os.path.join(DD.thisOutd,f'{D.jobid}_WEB.xlsm')
     import shutil as _shutil
     _shutil.copy(xl, uxl)
     prnt(f'user xl saved\n  {uxl}')

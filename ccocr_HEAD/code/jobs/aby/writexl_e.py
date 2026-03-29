@@ -128,9 +128,6 @@ def writexl_e(dig):
 #        return wb
     if D.appname == '為替先物レート表_ccocr':
         wb.save(os.path.join(jobdir,f'{jobid}.xlsx'))
-    elif DD.use_web:
-        # both mode: distinguish from web output
-        wb.save(os.path.join(jobdir,f'{jobid}_WEB.xlsm'))
     else:
         wb.save(os.path.join(jobdir,f'{jobid}.xlsm'))
     return
