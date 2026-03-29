@@ -43,6 +43,8 @@ def digdb(docdef):
         for do in dos:
             do.engine = engine  if engine  else ''
             do.usepng = usepng  if usepng  else ''
+            prnt(f'[QUIT CHECK] digdb: do.pdf={do.pdf!r} do.engine={do.engine!r} do.usepng={do.usepng!r}')
+        quit()
         dig[docname] += dos
     if DD.use_spic:
         spic(dig)

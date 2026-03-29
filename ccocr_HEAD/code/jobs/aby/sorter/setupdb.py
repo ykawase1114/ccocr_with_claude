@@ -44,4 +44,7 @@ def setupdb(dumpdb):
     for key in pdf_pg:
         pdf_pg[key] = [[min(pdf_pg[key]), max(pdf_pg[key])]]
     gv.pdf_meta = pdf_meta  # replaces old gv.pdf_engine
+    from m.prnt import prnt
+    prnt(f'[QUIT CHECK] sorter setupdb: pdf_meta = {pdf_meta}')
+    quit()
     return pdf_pg

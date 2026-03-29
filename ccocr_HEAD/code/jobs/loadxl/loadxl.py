@@ -102,6 +102,9 @@ def loadxl():
                     'pdf2api'   : pdf2api   ,
                     'png2api'   : png2api   }
 
+    prnt(f'[QUIT CHECK] DD.frmopt = {DD.frmopt}')
+    quit()
+
     # images info will be added
 
     if twoup  == 'NOT 2UP':
