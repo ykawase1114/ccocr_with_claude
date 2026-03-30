@@ -104,7 +104,7 @@ tr.txt:hover th { background: #3a3a3a; }  /* keep sticky th dark on hover */
 
 /* clone cells */
 tr.txt td input[data-clone="true"] {
-  background: #f0f7ff; color: #0055aa;
+  background: #f0f0f0; color: #777;
   cursor: default; pointer-events: none;
 }
 
