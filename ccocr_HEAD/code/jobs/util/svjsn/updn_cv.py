@@ -89,7 +89,6 @@ def updn_cv(png, jsnf): # can be any image incl pdf
         hdr, ctype = phdr(res.headers)
         stat = pbdy(ctype,res)
         if stat != 'succeeded':
-            prnt(f'stat {stat}')
             time.sleep(1)
         else:
             break

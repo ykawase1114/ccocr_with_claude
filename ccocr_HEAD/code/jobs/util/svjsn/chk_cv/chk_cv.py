@@ -24,11 +24,8 @@ def chk_cv(bn,jsn):
         prnt(f'checking lv2 (page) of {bn} pg{pcnt+1}')
         jsns2 = lv2(bn,jsn2,pcnt)               # ['readResults']
         for lcnt,jsn3 in enumerate(jsns2):
-            prnt(f'checking lv3 (line) of {bn} pg{pcnt+1} lin{lcnt+1}')
             jsns3 = lv3(bn,jsn3,pcnt,lcnt)
             for wcnt,jsn4 in enumerate(jsns3):
-                prnt((  f'checking lv4 (word) of {bn} pg{pcnt+1} '
-                        f'lin{lcnt+1} w{wcnt+1}'))
                 lv4(bn,jsn4,pcnt,lcnt,wcnt)
     jsnrawPls = os.path.join(D.logd,'jsnRAW+')
     os.makedirs(jsnrawPls, exist_ok=True)

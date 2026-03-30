@@ -71,7 +71,6 @@ def list_font_encodings(pdf_path: str) -> Dict[int, Set[str]]:
             cmap_name = _name(encoding) if encoding is not None else None
             if cmap_name:
                 encodings.add(cmap_name)
-            prnt(f"Page {i+1} | Font {font_key}: Subtype={subtype}, BaseFont={basefont}, Encoding={cmap_name}")
         page_to_encodings[i] = encodings
     return page_to_encodings
 

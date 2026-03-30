@@ -23,11 +23,8 @@ def chk_di(bn,jsn):
         prnt(f'checking lv2 (page) of {bn} pg{pcnt+1}')
         lines,words = lv2(bn,jsn2,pcnt)            # (lines[], words[])
         for lcnt,jsn3 in enumerate(lines):
-            prnt(f'checking lv3 (line) of {bn} pg{pcnt+1} lin{lcnt+1}')
             lv3_line(bn,jsn3,pcnt,lcnt)
         for wcnt,jsn4 in enumerate(words):
-            prnt((  f'checking lv3 (word) of {bn} pg{pcnt+1} '
-                    f'w{wcnt+1}'))
             lv3_word(bn,jsn4,pcnt,wcnt)
     jsnrawPls = os.path.join(D.logd,'jsnRAW+')
     os.makedirs(jsnrawPls, exist_ok=True)
