@@ -10,8 +10,8 @@ const JA = (navigator.language || '').startsWith('ja');
 
 const MSG = {
   instruction: JA
-    ? '誤読があれば修正して、右下の「確認終了」を押してください。'
-    : 'Correct any misreadings, then click "Confirm" at the bottom right.',
+    ? '誤読があれば修正して、ページ下端の「確認終了」を押してください。'
+    : 'Correct any misreadings, then click "Confirm" at the bottom left.',
   sheet: JA ? 'シート：' : 'Sheet:',
   post:  JA ? '確認終了' : 'Confirm',
 };
