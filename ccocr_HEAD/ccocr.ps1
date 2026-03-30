@@ -8,7 +8,7 @@
 Add-Type -AssemblyName System.Windows.Forms
 
 $thisName   = 'ccocr'
-$repoUrl    = 'https://github.com/ykawate1114/ccocr_with_claude.git'
+$repoUrl    = 'https://github.com/ykawase1114/ccocr_with_claude.git'
 $appDataDir = Join-Path $env:LOCALAPPDATA 'chuanlai_apps\ccocr'
 $sysFldFile = Join-Path $appDataDir 'sysFld.txt'
 $cfgMapFile = Join-Path $appDataDir 'config_map.json'
