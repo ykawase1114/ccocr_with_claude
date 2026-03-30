@@ -178,4 +178,5 @@ foreach ($module in $pyModules) {
 #------------------------------------------------------------
 # 7. main.py 起動
 #------------------------------------------------------------
+$env:PYTHONIOENCODING = 'utf-8'
 python main.py $appFld $flowid $thisName --config $xlPath
