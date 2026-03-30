@@ -12,7 +12,10 @@ $repoUrl    = 'https://github.com/ykawase1114/ccocr_with_claude.git'
 $appDataDir = Join-Path $env:LOCALAPPDATA 'chuanlai_apps\ccocr'
 $sysFldFile = Join-Path $appDataDir 'sysFld.txt'
 $cfgMapFile = Join-Path $appDataDir 'config_map.json'
-$exePath    = $MyInvocation.MyCommand.Path
+
+# ps2exe では $scriptDir / $MyInvocation が使えないためプロセスから取得
+$exePath  = [System.Diagnostics.Process]::GetCurrentProcess().MainModule.FileName
+$scriptDir = Split-Path $exePath -Parent
 
 New-Item -ItemType Directory -Path $appDataDir -Force | Out-Null
 
@@ -46,7 +49,7 @@ if ($null -eq $sysFld) {
     $sysFld = Join-Path $dlg.SelectedPath 'ccocr'
 
     # git は exe 隣の MinGit を使う
-    $git = Join-Path $PSScriptRoot 'MinGit\cmd\git.exe'
+    $git = Join-Path $scriptDir 'MinGit\cmd\git.exe'
     if (-not (Test-Path $git)) {
         errmsg ("MinGit が見つかりません。`n`n" +
                 "exe と同じフォルダに MinGit フォルダを置いてください。")
@@ -77,7 +80,7 @@ if ($null -eq $sysFld) {
 #------------------------------------------------------------
 $appFld    = Join-Path $sysFld 'ccocr_HEAD'   # repo内の実コードroot
 $gitInRepo = Join-Path $appFld 'MinGit\cmd\git.exe'
-$gitLocal  = Join-Path $PSScriptRoot 'MinGit\cmd\git.exe'
+$gitLocal  = Join-Path $scriptDir 'MinGit\cmd\git.exe'
 if     (Test-Path $gitInRepo) { $git = $gitInRepo }
 elseif (Test-Path $gitLocal)  { $git = $gitLocal  }
 else {
@@ -111,7 +114,7 @@ if ($null -eq $xlPath) {
     $dlg = New-Object System.Windows.Forms.OpenFileDialog
     $dlg.Title            = '設定 Excel ファイルを選択してください'
     $dlg.Filter           = 'Excel Files (*.xlsx;*.xlsm)|*.xlsx;*.xlsm'
-    $dlg.InitialDirectory = $PSScriptRoot
+    $dlg.InitialDirectory = $scriptDir
     if ($dlg.ShowDialog() -ne 'OK') { exit }
     $xlPath = $dlg.FileName
 
@@ -123,7 +126,7 @@ if ($null -eq $xlPath) {
 #------------------------------------------------------------
 # 4. flowid (Python 互換のため exe 隣に隠しファイルで保持)
 #------------------------------------------------------------
-$flowidFile = Join-Path $PSScriptRoot '.flowid'
+$flowidFile = Join-Path $scriptDir '.flowid'
 if (Test-Path $flowidFile) {
     $flowid = (Get-Content $flowidFile -Encoding UTF8).Trim()
 } else {
