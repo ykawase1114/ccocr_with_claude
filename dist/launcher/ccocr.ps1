@@ -1,7 +1,7 @@
 ﻿﻿# vim: set ts=4 sw=4 sts=4 et ff=unix fenc=utf-8 ai :
 #
-#   ccocr.ps1       260330  cy
-#   new launcher: AppData-based state, git clone/pull, config_map
+#   ccocr.ps1       260331  cy
+#   launcher: AppData fixed install, git clone/pull, config_map
 #
 #--------1---------2---------3---------4---------5---------6---------7--------#
 
@@ -9,15 +9,12 @@ Add-Type -AssemblyName System.Windows.Forms
 
 $thisName   = 'ccocr'
 $repoUrl    = 'https://github.com/ykawase1114/ccocr.git'
-$appDataDir = Join-Path $env:LOCALAPPDATA 'chuanlai_apps\ccocr'
-$sysFldFile = Join-Path $appDataDir 'sysFld.txt'
-$cfgMapFile = Join-Path $appDataDir 'config_map.json'
+$sysFld     = Join-Path $env:LOCALAPPDATA 'ChuanlaiApps\ccocr'
+$cfgMapFile = Join-Path $sysFld 'config_map.json'
 
 # ps2exe では $scriptDir / $MyInvocation が使えないためプロセスから取得
-$exePath  = [System.Diagnostics.Process]::GetCurrentProcess().MainModule.FileName
+$exePath   = [System.Diagnostics.Process]::GetCurrentProcess().MainModule.FileName
 $scriptDir = Split-Path $exePath -Parent
-
-New-Item -ItemType Directory -Path $appDataDir -Force | Out-Null
 
 #------------------------------------------------------------
 # errmsg helper
@@ -33,27 +30,21 @@ function errmsg($msg) {
 }
 
 #------------------------------------------------------------
-# 1. sysFld の確認 / 初回インストール
+# 1. 初回インストール判定 (.git の有無)
 #------------------------------------------------------------
-$sysFld = $null
-if (Test-Path $sysFldFile) {
-    $sysFld = (Get-Content $sysFldFile -Encoding UTF8).Trim()
-    if (-not (Test-Path $sysFld)) { $sysFld = $null }
-}
+$isFirstRun = -not (Test-Path (Join-Path $sysFld '.git'))
 
-if ($null -eq $sysFld) {
-    $dlg = New-Object System.Windows.Forms.FolderBrowserDialog
-    $dlg.Description         = 'ccocr のインストール先フォルダを選択してください'
-    $dlg.ShowNewFolderButton = $true
-    if ($dlg.ShowDialog() -ne 'OK') { exit }
-    $sysFld = Join-Path $dlg.SelectedPath 'ccocr'
-
-    # git は exe 隣の MinGit を使う
+if ($isFirstRun) {
     $git = Join-Path $scriptDir 'MinGit\cmd\git.exe'
     if (-not (Test-Path $git)) {
         errmsg ("MinGit が見つかりません。`n`n" +
                 "exe と同じフォルダに MinGit フォルダを置いてください。")
         exit
+    }
+    # 空フォルダが存在する場合は削除（git clone のため）
+    if ((Test-Path $sysFld) -and
+        (Get-ChildItem $sysFld -Force | Measure-Object).Count -eq 0) {
+        Remove-Item $sysFld
     }
     Write-Host "git clone $repoUrl"
     $cloneOut = & $git clone $repoUrl $sysFld 2>&1
@@ -63,9 +54,6 @@ if ($null -eq $sysFld) {
                 "エラー詳細:`n" + ($cloneOut -join "`n"))
         exit
     }
-
-    Set-Content -Path $sysFldFile -Value $sysFld -Encoding UTF8
-
     [System.Windows.Forms.MessageBox]::Show(
         ("インストールが完了しました。`n`n" +
          "exe と同じフォルダの MinGit フォルダは削除してかまいません。"),
