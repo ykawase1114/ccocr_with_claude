@@ -26,5 +26,6 @@ Thumbs.db
 *.swp
 *.swo
 
-# Claude Code ローカル設定
+# Claude Code ローカル設定・ガイド
 .claude/
+CLAUDE.md
