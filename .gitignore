@@ -25,3 +25,6 @@ Thumbs.db
 # エディタ
 *.swp
 *.swo
+
+# Claude Code ローカル設定
+.claude/
