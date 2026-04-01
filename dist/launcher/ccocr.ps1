@@ -168,4 +168,4 @@ foreach ($module in $pyModules) {
 #------------------------------------------------------------
 $env:PYTHONIOENCODING = 'utf-8'
 [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
-python main.py $appFld $flowid $thisName --config $xlPath
+python -u main.py $appFld $flowid $thisName --config $xlPath
