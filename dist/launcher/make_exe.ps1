@@ -32,7 +32,7 @@ Invoke-ps2exe `
     -outputFile $exePath `
     -iconFile   $icoPath `
     -title      'ccocr' `
-    -version    '2.0.10' `
+    -version    '2.1.8' `
     -noConsole:$false
 
 if (Test-Path $exePath) {
