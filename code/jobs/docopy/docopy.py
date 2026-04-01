@@ -7,7 +7,7 @@
 #   copy png* from old log file if matches condition.
 #   useful for TRY AND ERROR on making msconfig
 #   pngPRE/ROT/MK/RMK: copied from past log
-#   pngUP: removed (not needed; API not called when reusing past log)
+#   pngUP, jsn, jsnRAW: removed (not needed; API not called when reusing past log)
 #
 #--------1---------2---------3---------4---------5---------6---------7--------#
 
@@ -52,8 +52,10 @@ def docopy():
     DD.dbf      = dst_dumpdb
     DD.pngROT   = dst_pngROT
 
-    prnt('removing empty pngUP (not needed when reusing past log)')
+    prnt('removing empty folders not needed when reusing past log')
     shutil.rmtree(dst_pngUP)
+    shutil.rmtree(os.path.join(dst, 'jsn'))
+    shutil.rmtree(os.path.join(dst, 'jsnRAW'))
     prnt('copying fld "pngPRE"')
     shutil.copytree(src_pngPRE, dst_pngPRE, dirs_exist_ok=True)
     prnt('copying fld "pngROT"')
