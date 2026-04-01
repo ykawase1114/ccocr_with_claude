@@ -95,9 +95,13 @@ if (Test-Path $cfgMapFile) {
 # 配列に強制変換（1要素の場合 ConvertFrom-Json が object を返すため）
 $cfgMap = @($cfgMap)
 
+# 存在しない xl のエントリを除去してから保存
+$cfgMap = @($cfgMap | Where-Object { Test-Path $_.xl })
+$cfgMap | ConvertTo-Json | Set-Content -Path $cfgMapFile -Encoding UTF8
+
 foreach ($entry in $cfgMap) {
     if ($entry.exe -eq $exePath) {
-        if (Test-Path $entry.xl) { $xlPath = $entry.xl }
+        $xlPath = $entry.xl
         break
     }
 }
