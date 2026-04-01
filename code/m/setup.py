@@ -8,6 +8,7 @@
 
 from datetime import datetime
 import os
+import shutil
 import sys
 
 from m.env      import D
@@ -16,6 +17,20 @@ from m.kickPS   import kickPS_console as kickPS0
 from jobs.env   import DD
 
 import argparse
+
+def _cleanup_logs(sysFld, keep=10):
+    logbase = os.path.join(sysFld, 'log')
+    if not os.path.isdir(logbase):
+        return
+    entries = sorted(
+        [e for e in os.scandir(logbase) if e.is_dir()],
+        key=lambda e: e.stat().st_mtime
+    )
+    to_delete = entries[:-keep] if len(entries) > keep else []
+    for e in to_delete:
+        shutil.rmtree(e.path, ignore_errors=True)
+    if to_delete:
+        prnt(f'log cleanup: deleted {len(to_delete)} old log folder(s)')
 
 def setupPlus():  ## for embedded
     parser = argparse.ArgumentParser(description='for EMBEDDED mode')
@@ -66,6 +81,7 @@ def setupPlus():  ## for embedded
     D.flwd      = flwd
     D.logd      = logd
     D.logf      = logf
+    _cleanup_logs(sysFld)
     D.papaidx   = int(idx)
     DD.config   = config
     D.EMBEDDED  = EMBEDDED
@@ -104,6 +120,7 @@ def setup():    ## for nomal use
     os.makedirs(logd, exist_ok=True)
     logf        = os.path.join(logd,f'{jobid}.txt')
     D.logf      = logf
+    _cleanup_logs(sysFld)
     flwd        = os.path.join(os.getenv('USERPROFILE'),'DigNav','flows',flwid)
     D.flwd      = flwd
     prnt('setup completed')
