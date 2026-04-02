@@ -11,6 +11,7 @@ Add-Type -AssemblyName System.Windows.Forms
 
 
 $thisName   = 'ccocr'
+$appVer     = 'v2.2.11'
 $repoUrl    = 'https://github.com/ykawase1114/ccocr.git'
 $sysFld     = Join-Path $env:LOCALAPPDATA 'ChuanlaiApps\ccocr'
 $cfgMapFile = Join-Path $sysFld 'config_map.json'
@@ -26,7 +27,7 @@ function errmsg($msg) {
     $f = New-Object Windows.Forms.Form
     $f.TopMost = $True
     [System.Windows.Forms.MessageBox]::Show(
-        $f, "$msg", $thisName,
+        $f, "$msg", "$thisName $appVer",
         [System.Windows.Forms.MessageBoxButtons]::OK,
         [System.Windows.Forms.MessageBoxIcon]::Error
     ) | Out-Null
@@ -58,7 +59,7 @@ if ($isFirstRun) {
     [System.Windows.Forms.MessageBox]::Show(
         ("インストールが完了しました。`n`n" +
          "exe と同じフォルダの MinGit フォルダは削除してかまいません。"),
-        $thisName,
+        "$thisName $appVer",
         [System.Windows.Forms.MessageBoxButtons]::OK,
         [System.Windows.Forms.MessageBoxIcon]::Information
     ) | Out-Null
@@ -119,7 +120,7 @@ if ($myXl -ne $null -and (Test-Path $myXl) -and
         }
         [System.Windows.Forms.MessageBox]::Show(
             "ccocr.exe と設定エクセルは同じフォルダに置いてください。",
-            $thisName,
+            "$thisName $appVer",
             [System.Windows.Forms.MessageBoxButtons]::OK,
             [System.Windows.Forms.MessageBoxIcon]::Warning
         ) | Out-Null
@@ -138,7 +139,7 @@ $r = [System.Windows.Forms.MessageBox]::Show(
      "ccocr のアイコンが出てきます。`n`n" +
      "「閉じる」ボタンで消すと、処理が止まりますので、`n" +
      "処理が終わるまで閉じないでください。"),
-    $thisName,
+    "$thisName $appVer",
     [System.Windows.Forms.MessageBoxButtons]::OKCancel,
     [System.Windows.Forms.MessageBoxIcon]::Information
 )
