@@ -5,8 +5,8 @@
 #
 #--------1---------2---------3---------4---------5---------6---------7--------#
 
-import traceback
 import sys
+import traceback
 
 from m.prnt         import prnt
 from m.setup        import setup, setupPlus
@@ -31,7 +31,7 @@ except Exception as e:
     prnt(f'''PROGRAM TERMINATED
 {traceback.format_exc()}''')
     abend(e)
-    quit()
+    sys.exit(1)
 prnt('ALL FINISHED')
 if not D.EMBEDDED:
     finish()

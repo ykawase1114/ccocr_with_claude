@@ -197,7 +197,11 @@ foreach ($module in $pyModules) {
 # 7. main.py 起動
 #------------------------------------------------------------
 $runExe = Join-Path $sysFld 'dist\launcher\ccocr_run.exe'
-Start-Process $runExe `
+$proc = Start-Process $runExe `
     -ArgumentList "`"$appFld`" $flowid $thisName `"$xlPath`"" `
     -WindowStyle Minimized `
-    -Wait
+    -PassThru -Wait
+if ($proc.ExitCode -ne 0) {
+    $cfgMap = @($cfgMap | Where-Object { $_.exe -ne $exePath })
+    $cfgMap | ConvertTo-Json | Set-Content -Path $cfgMapFile -Encoding UTF8
+}
