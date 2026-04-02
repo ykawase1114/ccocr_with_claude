@@ -33,21 +33,6 @@ function errmsg($msg) {
 }
 
 #------------------------------------------------------------
-# 0. 開始ダイアログ
-#------------------------------------------------------------
-$r = [System.Windows.Forms.MessageBox]::Show(
-    ("OCR処理を始めます。`n`n" +
-     "しばらくすると、タスクバー（画面下端）に`n" +
-     "ccocr のアイコンが出てきます。`n`n" +
-     "「閉じる」ボタンで消すと、処理が止まりますので、`n" +
-     "処理が終わるまで閉じないでください。"),
-    $thisName,
-    [System.Windows.Forms.MessageBoxButtons]::OKCancel,
-    [System.Windows.Forms.MessageBoxIcon]::Information
-)
-if ($r -ne [System.Windows.Forms.DialogResult]::OK) { exit }
-
-#------------------------------------------------------------
 # 1. 初回インストール判定 (.git の有無)
 #------------------------------------------------------------
 $isFirstRun = -not (Test-Path (Join-Path $sysFld '.git'))
@@ -112,26 +97,52 @@ foreach ($entry in $cfgMap) {
     if ($entry.exe -eq $exePath) { $myXl = $entry.xl; break }
 }
 
-if ($myXl -ne $null -and (Test-Path $myXl)) {
-    # xl が存在する → そのまま使用
+if ($myXl -ne $null -and (Test-Path $myXl) -and
+    ((Split-Path $myXl -Parent) -eq $scriptDir)) {
+    # xl が存在し、同フォルダ → そのまま使用
     $xlPath = $myXl
 } else {
-    # xl が存在しない（または初回）→ そのxlを参照するエントリを全削除してダイアログ
+    # xl が存在しない／別フォルダ → エントリ削除してダイアログ
     if ($myXl -ne $null) {
         $cfgMap = @($cfgMap | Where-Object { $_.xl -ne $myXl })
         $cfgMap | ConvertTo-Json | Set-Content -Path $cfgMapFile -Encoding UTF8
     }
-    $dlg = New-Object System.Windows.Forms.OpenFileDialog
-    $dlg.Title            = '設定 Excel ファイルを選択してください'
-    $dlg.Filter           = 'Excel Files (*.xlsx;*.xlsm)|*.xlsx;*.xlsm'
-    $dlg.InitialDirectory = $scriptDir
-    if ($dlg.ShowDialog() -ne 'OK') { exit }
-    $xlPath = $dlg.FileName
-
+    while ($true) {
+        $dlg = New-Object System.Windows.Forms.OpenFileDialog
+        $dlg.Title            = '設定 Excel ファイルを選択してください（このフォルダ内限定です）'
+        $dlg.Filter           = 'Excel Files (*.xlsx;*.xlsm)|*.xlsx;*.xlsm'
+        $dlg.InitialDirectory = $scriptDir
+        if ($dlg.ShowDialog() -ne 'OK') { exit }
+        if ((Split-Path $dlg.FileName -Parent) -eq $scriptDir) {
+            $xlPath = $dlg.FileName
+            break
+        }
+        [System.Windows.Forms.MessageBox]::Show(
+            "ccocr.exe と設定エクセルは同じフォルダに置いてください。",
+            $thisName,
+            [System.Windows.Forms.MessageBoxButtons]::OK,
+            [System.Windows.Forms.MessageBoxIcon]::Warning
+        ) | Out-Null
+    }
     $newEntry = [PSCustomObject]@{ exe = $exePath; xl = $xlPath }
     $cfgMap  += $newEntry
     $cfgMap | ConvertTo-Json | Set-Content -Path $cfgMapFile -Encoding UTF8
 }
+
+#------------------------------------------------------------
+# 3b. 開始ダイアログ
+#------------------------------------------------------------
+$r = [System.Windows.Forms.MessageBox]::Show(
+    ("OCR処理を始めます。`n`n" +
+     "しばらくすると、タスクバー（画面下端）に`n" +
+     "ccocr のアイコンが出てきます。`n`n" +
+     "「閉じる」ボタンで消すと、処理が止まりますので、`n" +
+     "処理が終わるまで閉じないでください。"),
+    $thisName,
+    [System.Windows.Forms.MessageBoxButtons]::OKCancel,
+    [System.Windows.Forms.MessageBoxIcon]::Information
+)
+if ($r -ne [System.Windows.Forms.DialogResult]::OK) { exit }
 
 #------------------------------------------------------------
 # 4. flowid (Python 互換のため exe 隣に隠しファイルで保持)
