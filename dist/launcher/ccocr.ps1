@@ -37,9 +37,9 @@ function errmsg($msg) {
 #------------------------------------------------------------
 $r = [System.Windows.Forms.MessageBox]::Show(
     ("OCR処理を始めます。`n`n" +
-     "処理中は、タスクバー（画面下端）に`n" +
-     "Python のアイコン（青と黄色の丸2つ）が表示されます。`n`n" +
-     "「閉じる」ボタンで消すと処理が止まりますので、`n" +
+     "しばらくすると、タスクバー（画面下端）に`n" +
+     "ccocr のアイコンが出てきます。`n`n" +
+     "「閉じる」ボタンで消すと、処理が止まりますので、`n" +
      "処理が終わるまで閉じないでください。"),
     $thisName,
     [System.Windows.Forms.MessageBoxButtons]::OKCancel,
