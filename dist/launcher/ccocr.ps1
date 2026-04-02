@@ -185,9 +185,8 @@ foreach ($module in $pyModules) {
 #------------------------------------------------------------
 # 7. main.py 起動
 #------------------------------------------------------------
-$env:PYTHONIOENCODING = 'utf-8'
-Start-Process python `
-    -ArgumentList "-u main.py `"$appFld`" $flowid $thisName --config `"$xlPath`"" `
+$runExe = Join-Path $sysFld 'dist\launcher\ccocr_run.exe'
+Start-Process $runExe `
+    -ArgumentList "`"$appFld`" $flowid $thisName `"$xlPath`"" `
     -WindowStyle Minimized `
-    -WorkingDirectory $codeFld `
     -Wait

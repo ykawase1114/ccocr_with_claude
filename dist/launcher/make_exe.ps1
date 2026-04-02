@@ -7,10 +7,12 @@
 #
 #--------1---------2---------3---------4---------5---------6---------7--------#
 
-$workFld = Split-Path $MyInvocation.MyCommand.Path
-$ps1Path = Join-Path $workFld 'ccocr.ps1'
-$exePath = Join-Path $workFld 'ccocr.exe'
-$icoPath = Join-Path $workFld 'ccocr.ico'
+$workFld    = Split-Path $MyInvocation.MyCommand.Path
+$ps1Path    = Join-Path $workFld 'ccocr.ps1'
+$exePath    = Join-Path $workFld 'ccocr.exe'
+$runPs1Path = Join-Path $workFld 'ccocr_run.ps1'
+$runExePath = Join-Path $workFld 'ccocr_run.exe'
+$icoPath    = Join-Path $workFld 'ccocr.ico'
 
 # Install ps2exe if not available
 if (-not (Get-Module -ListAvailable -Name ps2exe)) {
@@ -38,6 +40,21 @@ Invoke-ps2exe `
 if (Test-Path $exePath) {
     $size = (Get-Item $exePath).Length
     Write-Host "Done: ccocr.exe ($size bytes)"
+} else {
+    Write-Host "Build failed."
+}
+
+Write-Host "Building: $runExePath"
+Invoke-ps2exe `
+    -inputFile  $runPs1Path `
+    -outputFile $runExePath `
+    -iconFile   $icoPath `
+    -title      'ccocr' `
+    -version    '2.2.3'
+
+if (Test-Path $runExePath) {
+    $size = (Get-Item $runExePath).Length
+    Write-Host "Done: ccocr_run.exe ($size bytes)"
 } else {
     Write-Host "Build failed."
 }
