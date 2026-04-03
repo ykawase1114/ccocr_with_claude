@@ -1,4 +1,4 @@
-<#
+﻿<#
     vim: set ts=4 sw=4 sts=4 et ff=unix fenc=utf-8 ai :
 
     ccocr.ps1       260403  cy
