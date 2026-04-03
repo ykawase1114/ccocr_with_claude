@@ -11,8 +11,8 @@ Add-Type -AssemblyName System.Windows.Forms
 
 
 $thisName   = 'ccocr'
-$appVer     = 'v2.2.11'
-$repoUrl    = 'https://github.com/ykawase1114/ccocr.git'
+$appVer     = 'v2.3.2'
+$repoUrl    = 'https://github.com/weininfuwu/ccocr.git'
 $sysFld     = Join-Path $env:LOCALAPPDATA 'ChuanlaiApps\ccocr'
 $cfgMapFile = Join-Path $sysFld 'config_map.json'
 
@@ -89,6 +89,14 @@ else {
     exit
 }
 & $git -C $sysFld pull 2>&1 | Out-Null
+
+# アップグレード: bundled python を AppData 配下にコピー（初回以外も対応）
+$srcPy = Join-Path $scriptDir 'python'
+$dstPy = Join-Path $sysFld   'dist\python'
+if ((Test-Path $srcPy) -and -not (Test-Path $dstPy)) {
+    Copy-Item $srcPy $dstPy -Recurse
+    Remove-Item $srcPy -Recurse -Force
+}
 
 #------------------------------------------------------------
 # 3. 設定 Excel の確認
