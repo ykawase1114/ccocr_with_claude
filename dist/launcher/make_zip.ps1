@@ -20,9 +20,11 @@ New-Item $pkgFld -ItemType Directory | Out-Null
 
 # コピー
 Copy-Item (Join-Path $launcherFld 'ccocr.exe')  $pkgFld
-Copy-Item (Join-Path $launcherFld 'MinGit')      $pkgFld -Recurse
+$sysParts = Join-Path $pkgFld 'systemParts'
+New-Item $sysParts -ItemType Directory | Out-Null
+Copy-Item (Join-Path $launcherFld 'MinGit')      $sysParts -Recurse
 $pyFld = Join-Path $distFld 'python'
-if (Test-Path $pyFld) { Copy-Item $pyFld $pkgFld -Recurse }
+if (Test-Path $pyFld) { Copy-Item $pyFld $sysParts -Recurse }
 Copy-Item (Join-Path $distFld     'doc')         $pkgFld -Recurse
 Copy-Item (Join-Path $distFld     'sample')      $pkgFld -Recurse
 Copy-Item (Join-Path $distFld     'README.txt')  $pkgFld

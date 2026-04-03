@@ -44,8 +44,8 @@ $installedVer = if (Test-Path $verFile) {
                     (Get-Content $verFile -Encoding UTF8).Trim()
                 } else { 'v0.0.0' }
 
-$srcPy  = Join-Path $scriptDir 'python'
-$srcGit = Join-Path $scriptDir 'MinGit'
+$srcPy  = Join-Path $scriptDir 'systemParts\python'
+$srcGit = Join-Path $scriptDir 'systemParts\MinGit'
 $dstPy  = Join-Path $sysFld   'dist\python'
 $dstGit = Join-Path $sysFld   'dist\launcher\MinGit'
 
@@ -68,9 +68,10 @@ if (-not $isFirstRun) {
         $missingGit = -not (Test-Path $srcGit)
         if ($missingPy -or $missingGit) {
             errmsg ("PCに保存されているパーツの更新が必要です。`n`n" +
-                    "ccocr.exe`n設定エクセル`n処理する帳表`n" +
+                    "ccocr.exe`n`n" +
+                    "　設定エクセル`n　処理する帳票`n`n" +
                     "の他に`n`n" +
-                    "　MinGit フォルダ`n　Python フォルダ`n`n" +
+                    "　systemParts フォルダ`n`n" +
                     "全部同じフォルダに入れて、再度動かしてください。")
             exit
         }
